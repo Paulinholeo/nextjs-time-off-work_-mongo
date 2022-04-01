@@ -4,6 +4,6 @@ interface Props {
     time: Time | undefined;
 }
 
-export default function ({ time }: Props) {
+export default function Message({ time }: Props) {
     return <label>Check Out: {time?.timeOffWork}</label>;
 }
