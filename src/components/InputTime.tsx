@@ -1,15 +1,14 @@
-import { type } from 'os';
-
 interface Props {
     id: string;
     text: string;
-    type: 'time';
+    type: string;
     step: string;
     name: string;
     min?: string;
     max?: string;
     value: string;
     required: boolean;
+    className?: string;
     onChange?: (value: any) => void;
 }
 export default function InputTime({
@@ -22,11 +21,14 @@ export default function InputTime({
     max,
     value,
     required,
+    className,
     onChange,
 }: Props) {
     return (
-        <div>
-            <label htmlFor={id}>{text}</label>
+        <>
+            <label htmlFor={id} className="text-gray-700">
+                {text}
+            </label>
             <input
                 id={id}
                 type={type}
@@ -36,8 +38,9 @@ export default function InputTime({
                 max={max}
                 value={value}
                 required={required}
+                className={className}
                 onChange={(event) => onChange?.(event.target.value)}
             />
-        </div>
+        </>
     );
 }
