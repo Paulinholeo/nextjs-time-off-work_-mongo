@@ -5,7 +5,7 @@ import Button from './Button';
 import InputTime from './InputTime';
 
 interface Props {
-    setTime: any;
+    setTime: React.Dispatch<React.SetStateAction<Time>>;
 }
 
 export default function Form({ setTime }: Props) {
@@ -29,10 +29,11 @@ export default function Form({ setTime }: Props) {
         const time3 = moment.duration(timeThree);
         const timeOffWork = time3.add(remainingHours);
 
-        setTime((time: Time) => ({
+        setTime(() => ({
             timeOffWork: `
                 ${String(timeOffWork.hours()).padStart(2, '0')} :
                 ${String(timeOffWork.minutes()).padStart(2, '0')}`,
+            disabled: true,
         }));
     }
 

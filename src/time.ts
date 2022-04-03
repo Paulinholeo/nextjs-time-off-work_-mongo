@@ -3,4 +3,5 @@ export interface Time {
     timeTwo?: string;
     timeThree?: string;
     timeOffWork?: string;
+    disabled?: boolean;
 }
