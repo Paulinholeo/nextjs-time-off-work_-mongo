@@ -6,8 +6,10 @@ interface Props {
 }
 export default function Button({ type, className, children, onClick }: Props) {
     return (
-        <button type={type} className={className} onClick={onClick}>
-            {children}
-        </button>
+        <>
+            <button type={type} className={className} onClick={onClick}>
+                {children}
+            </button>
+        </>
     );
 }

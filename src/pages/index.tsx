@@ -12,22 +12,14 @@ const Home: NextPage = () => {
     };
 
     return (
-        <div className="flex justify-center">
-            <div className="block rounded-lg bg-white max-w-sm text-center">
-                <div className="py-3 px-6 border-b border-gray-300">
-                    Time Off Work
-                </div>
-                <div className="p-6 mb-4">
-                    <Form setTime={setTime} />
-                </div>
-                <div style={divStyle}>
-                    <Message
-                        time={time}
-                        className="font-bold text-red-500 text-lg"
-                    />
-                </div>
-            </div>
-        </div>
+        <>
+            <h3>Time Off Work</h3>
+            <p>type the time to calculate</p>
+
+            <Form setTime={setTime} />
+
+            <Message time={time} className="" />
+        </>
     );
 };
 
