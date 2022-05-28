@@ -1,87 +1,111 @@
+import Alert from '@mui/material/Alert';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import moment from 'moment';
-import React, { useState } from 'react';
-import { Time } from '../time';
-import Button from './Button';
-import InputTime from './InputTime';
+import React, { useEffect, useState } from 'react';
 
-interface Props {
-    setTime: React.Dispatch<React.SetStateAction<Time>>;
-}
+export default function Form() {
+  const d1 = new Date();
+  d1.setHours(9, 0, 0, 0);
 
-export default function Form({ setTime }: Props) {
-    const [timeOne, setTimeOne] = useState('09:00');
-    const [timeTwo, setTimeTwo] = useState('12:00');
-    const [timeThree, setTimeThree] = useState('13:00');
+  const d2 = new Date();
+  d2.setHours(12, 0, 0, 0);
 
-    function calculateEstimatedTime(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
+  const d3 = new Date();
+  d3.setHours(13, 0, 0, 0);
 
-        // hours worked
-        const time1 = moment.duration(timeOne);
-        const time2 = moment.duration(timeTwo);
-        const hoursWorked = time2.subtract(time1);
+  const [startTime, setStartTime] = useState<Date | null>(d1);
+  const [lunchTime, setLunchTime] = useState<Date | null>(d2);
+  const [returnTime, setReturnTime] = useState<Date | null>(d3);
+  const [timeOff, setTimeOff] = useState('18:00');
 
-        // remaining hours
-        const hoursPerDay = moment.duration('08:00');
-        const remainingHours = hoursPerDay.subtract(hoursWorked);
+  useEffect(() => {
+    calculate();
+  });
 
-        // time off work
-        const time3 = moment.duration(timeThree);
-        const timeOffWork = time3.add(remainingHours);
-
-        setTime(() => ({
-            timeOffWork: `
-                ${String(timeOffWork.hours()).padStart(2, '0')} :
-                ${String(timeOffWork.minutes()).padStart(2, '0')}`,
-            disabled: true,
-        }));
-    }
-
-    return (
-        <div>
-            <form onSubmit={calculateEstimatedTime}>
-                <InputTime
-                    id="timeOne"
-                    type="time"
-                    step="1"
-                    name="timeOne"
-                    min="09:00"
-                    max="10:00"
-                    value={timeOne}
-                    required
-                    text="Time One"
-                    onChange={setTimeOne}
-                />
-
-                <InputTime
-                    id="timeTwo"
-                    type="time"
-                    step="1"
-                    name="timeTwo"
-                    min="12:00"
-                    max="13:00"
-                    value={timeTwo}
-                    required
-                    text="Time Two"
-                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                    onChange={setTimeTwo}
-                />
-
-                <InputTime
-                    id="timeThree"
-                    type="time"
-                    step="1"
-                    name="timeThree"
-                    min="13:00"
-                    max="15:00"
-                    value={timeThree}
-                    required
-                    text="Time Three"
-                    onChange={setTimeThree}
-                />
-
-                <Button type="submit">Calculate Estimated Time</Button>
-            </form>
-        </div>
+  function calculate() {
+    // worked hour
+    const startTimeDuration: moment.Duration = moment.duration(
+      moment(startTime).format('HH:mm')
     );
+
+    const lunchTimetDuration: moment.Duration = moment.duration(
+      moment(lunchTime).format('HH:mm')
+    );
+
+    const workedHours = lunchTimetDuration.subtract(startTimeDuration);
+
+    // remaining hours
+    const hoursPerDay = moment.duration('08:00');
+    const remainingHours = hoursPerDay.subtract(workedHours);
+
+    // time off work
+    const returnTimeDuration: moment.Duration = moment.duration(
+      moment(returnTime).format('HH:mm')
+    );
+
+    const timeOffWork = returnTimeDuration.add(remainingHours);
+
+    setTimeOff(
+      () =>
+        `${String(timeOffWork.hours()).padStart(2, '0')}:${String(
+          timeOffWork.minutes()
+        ).padStart(2, '0')}`
+    );
+  }
+
+  return (
+    <>
+      <Card variant="outlined">
+        <CardContent>
+          {/* <Typography variant="h5" component="div">
+            Time off Work
+          </Typography> */}
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            time off work calculation
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Stack spacing={3}>
+              <TimePicker
+                label="Start Time"
+                value={startTime}
+                onChange={(newValue) => {
+                  setStartTime(newValue);
+                  calculate();
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+
+              <TimePicker
+                label="Lunch Time"
+                value={lunchTime}
+                onChange={(newValue) => {
+                  setLunchTime(newValue);
+                  calculate();
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+
+              <TimePicker
+                label="Return Time "
+                value={returnTime}
+                onChange={(newValue) => {
+                  setReturnTime(newValue);
+                  calculate();
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </Stack>
+          </LocalizationProvider>
+        </CardContent>
+      </Card>
+      <Alert severity="error">Time off Work: {timeOff}</Alert>
+    </>
+  );
 }
