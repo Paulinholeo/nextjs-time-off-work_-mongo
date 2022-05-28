@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5% 20%;
+}
+
+.card {
+  border: none;
+  box-shadow: none;
+}
+
+.alert {
+  margin-top: 5px;
+  margin-left: 17px;
+  margin-right: 17px;
+}

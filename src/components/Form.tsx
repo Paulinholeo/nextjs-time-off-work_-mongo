@@ -1,4 +1,5 @@
 import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
@@ -9,6 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import styles from '../styles/Form.module.css';
 
 export default function Form() {
   const d1 = new Date();
@@ -61,14 +63,11 @@ export default function Form() {
   }
 
   return (
-    <>
-      <Card variant="outlined">
+    <div className={styles.container}>
+      <Card variant="outlined" className={styles.card}>
         <CardContent>
-          {/* <Typography variant="h5" component="div">
-            Time off Work
-          </Typography> */}
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            time off work calculation
+            calculating time off work
           </Typography>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Stack spacing={3}>
@@ -105,7 +104,11 @@ export default function Form() {
           </LocalizationProvider>
         </CardContent>
       </Card>
-      <Alert severity="error">Time off Work: {timeOff}</Alert>
-    </>
+      <Alert variant="outlined" severity="info" className={styles.alert}>
+        <AlertTitle>
+          Time off Work: {timeOff} hrs &#128513;&#128517;&#128514;
+        </AlertTitle>
+      </Alert>
+    </div>
   );
 }
